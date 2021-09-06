@@ -77,6 +77,9 @@ def import_timeseries(filename, remain = 1):
             if sum(df.iloc[row,3:] == 0) > ((1 - remain) * len(df.iloc[row,3:]))
             ]
     df = df.drop(rows_to_drop, axis = 0)
+    # replaces zeros with NaNs -- these should be no fluorescent readings, i.e.
+    # no cell at that timepoint
+    df.replace(0, np.nan, inplace=True)
     return df
 
 def import_births(filename):

@@ -111,7 +111,7 @@ def kymograph(list_CellAttr, cell_attr,
     if mode == 'heatmap':
         seaborn.set()
         fig, ax = plt.subplots()
-        ax = seaborn.heatmap(kg_array, center = 0, cmap = "RdBu_r")
+        ax = seaborn.heatmap(kg_array, center = 0, cmap = "vlag")
     elif mode == 'heatmap_split':
         attr_list = [rgetattr(list_CellAttr[ii], order_by) \
                      for ii in range(len(list_CellAttr))]
@@ -128,13 +128,13 @@ def kymograph(list_CellAttr, cell_attr,
         for ii in range(ngroups):
             if ii == 0:
                 axs[ii] = seaborn.heatmap(kg_array[0:segments[0]],
-                                          center = 0, cmap = "RdBu_r",
+                                          center = 0, cmap = "vlag",
                                           ax = axs[ii], square = True,
                                           cbar = False,
                                           vmin = vmin, vmax = vmax)
             else:
                 axs[ii] = seaborn.heatmap(kg_array[segments[ii-1]:segments[ii]],
-                                          center = 0, cmap = "RdBu_r",
+                                          center = 0, cmap = "vlag",
                                           ax = axs[ii], square = True,
                                           cbar = False)
     elif mode == 'line':
