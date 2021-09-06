@@ -135,7 +135,7 @@ def autoreg(t,
             freq_npoints = 100):
     optimal_ar_order = ar_grima2020.optimise_ar_order(y, int(3*np.sqrt(len(y))))
     # out of curiosity
-    print(optimal_ar_order)
+    #print(optimal_ar_order)
     optimal_model = ar_grima2020.AR_Fit(y, optimal_ar_order) # is it doing something redundant?  Should check to see if I can improve performance
 
     sampling_pd = t[1] - t[0]

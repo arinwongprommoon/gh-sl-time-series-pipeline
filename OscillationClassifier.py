@@ -23,7 +23,7 @@ import featext.vis
 import catch22
 import leidenalg
 
-os.chdir('./data/arin')
+os.chdir('/home/arin/phd/phd-time-series-pipeline/data/arin')
 
 def add_classicalAttr(cell, oversampling_factor = 1):
     """Computes classical periodogram and adds PdgramAttr attributes"""
@@ -82,14 +82,14 @@ Whi5_births = pipeline.dataimport.import_births( \
         'FlavinWhi5_3_ffcorr_small_births.csv')
 
 # Import information from Baumgartner et al. (2018)
-Baum18_rawdata = pd.read_csv('baumgartner2018/Baumgartner2018_AllNormData.csv',
+Baum18_rawdata = pd.read_csv('../baumgartner2018/Baumgartner2018_AllNormData.csv',
                              header = 0)
 # Counts number of columns called 'time_*' and 'flavin_*'
 Baum18_time_ncols = len([s for s in Baum18_rawdata.columns.values if "time_" in s])
 Baum18_flavin_ncols = len([s for s in Baum18_rawdata.columns.values if "flavin_" in s])
 # Loads matrix that stores manually-defined oscillation categories
 Baum18_dcategory0 = \
-        pd.read_csv('baumgartner2018/Baumgartner2018_OscillationEvals.csv',
+        pd.read_csv('../baumgartner2018/Baumgartner2018_OscillationEvals.csv',
                     sep = ',', header = None)
 # Reshapes it and removes zeros
 Baum18_dcategory = Baum18_dcategory0.values.flatten()

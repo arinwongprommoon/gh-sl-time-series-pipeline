@@ -51,20 +51,20 @@ def dropTPs(df, dropTPs_num):
 # Import information from glucose ramp experiment into dataframes
 # (flavin_whi5_glucose_limitation_01, 2020-10-28)
 
-ChannelFlavin_rawdata = pipeline.dataimport.import_timeseries( \
+ChannelFlavin_rawdata = pipeline.dataimport.import_timeseries(
         'data/arin/Flavin-whi5-glucose-limitation_Flavin.csv')
 # drops first couple time points because of imaging errors
 dropTPs(ChannelFlavin_rawdata, dropTPs_num)
 # dummy data for oscillation category -- not used for now
 ChannelFlavin_dcategory = [3] * len(ChannelFlavin_rawdata)
 
-ChannelmCherry_rawdata = pipeline.dataimport.import_timeseries( \
+ChannelmCherry_rawdata = pipeline.dataimport.import_timeseries(
         'data/arin/Flavin-whi5-glucose-limitation_mCherry.csv')
 # drops first couple time points because of imaging errors
 dropTPs(ChannelmCherry_rawdata, dropTPs_num)
 # dummy data for oscillation category -- not used for now
 ChannelmCherry_dcategory = [3] * len(ChannelmCherry_rawdata)
-Births = pipeline.dataimport.import_births( \
+Births = pipeline.dataimport.import_births(
         'data/arin/Flavin-whi5-glucose-limitation_births.csv')
 
 
@@ -75,11 +75,11 @@ Births = pipeline.dataimport.import_births( \
 # copying old code to do a quick analysis before I go about leveraging
 # Alan's exportJSON
 
-GlucoseLimitation_ChannelFlavin_data = pipeline.dataimport.CellAttr_from_datasets( \
+GlucoseLimitation_ChannelFlavin_data = pipeline.dataimport.CellAttr_from_datasets(
         timeseries_df = ChannelFlavin_rawdata,
         categories_array = ChannelFlavin_dcategory,
         births_df = Births)
-GlucoseLimitation_ChannelmCherry_data = pipeline.dataimport.CellAttr_from_datasets( \
+GlucoseLimitation_ChannelmCherry_data = pipeline.dataimport.CellAttr_from_datasets(
         timeseries_df = ChannelmCherry_rawdata,
         categories_array = ChannelmCherry_dcategory,
         births_df = Births)
@@ -127,7 +127,7 @@ for ii, cell in enumerate(GlucoseLimitation.cells):
 # Process data
 for cell in GlucoseLimitation.cells:
     # apply notch filter
-    cell.flavin.reading_processed = pipeline.tsman.notch_filter( \
+    cell.flavin.reading_processed = pipeline.tsman.notch_filter(
             cell.flavin.reading, freq = 0.16, fs = 1/sampling_interval)
 
 
@@ -166,11 +166,11 @@ def mean_cell(list_CellAttr, list_attr):
     return MeanCell
 
 FY4MeanCell = \
-        mean_cell(FY4Cells, \
+        mean_cell(FY4Cells,
                   list_attr = ['flavin.reading_processed'])
 FY4MeanCell.plot_ts(y_attr = 'flavin.reading_processed', births = True)
 whi5mCherryMeanCell = \
-        mean_cell(whi5mCherryCells, \
+        mean_cell(whi5mCherryCells,
                   list_attr = ['flavin.reading_processed', 'mCherry.reading'])
 whi5mCherryMeanCell.plot_ts(y_attr = 'flavin.reading_processed', births = True)
 whi5mCherryMeanCell.plot_ts(y_attr = 'mCherry.reading', births = True)
@@ -199,7 +199,7 @@ if True:
     for event_time in autofluo_glucose_ramp_regime.time:
         axs01[0].axvline(event_time, ymin = 0, ymax = 1,
                          color = 'lightgrey', linestyle = '--')
-    axs01[0].set_title(cell.strain + ' strain in ' + cell.medium.base + \
+    axs01[0].set_title(cell.strain + ' strain in ' + cell.medium.base +
                        ', flavin LED ' + str(cell.flavin.exposure) + ' ms',
                        size = 10)
     axs01[0].set_ylabel('Flavin fluorescence (AU)')
@@ -215,7 +215,7 @@ if True:
     axs01[1].set_ylabel('Glucose concentration (g/L)')
 
     fig01.add_subplot(111, frameon = False)
-    plt.tick_params(labelcolor='none', \
+    plt.tick_params(labelcolor='none',
                     top=False, bottom=False, left=False, right=False)
     plt.xlabel('Time (min)')
     plt.show()
