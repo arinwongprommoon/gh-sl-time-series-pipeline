@@ -75,8 +75,18 @@ class ROC:
 
         return fig, ax
 
+def round(n, k):
+    """
+    rounds 'n' up/down to the nearest 'k'
+    use positive k to round up
+    use negative k to round down
+    """
+    return n - n % k
+
 def kymograph(list_CellAttr, cell_attr,
               order_by='cellid', normalise=False, mode='heatmap'):
+    # This is probably the most poorly-written code in the entire pipeline.
+    # It's impossible to understand and even more difficult to modify.
     """
     Draws kymograph
 
@@ -93,10 +103,13 @@ def kymograph(list_CellAttr, cell_attr,
     mode = string,
         'heatmap', 'heatmap_split', 'line'; line plots just the first 20
     """
-    # assumes all ts are same length
-    l = len(rgetattr(list_CellAttr[0], cell_attr))
+    # how to order the time series
     order = np.argsort([rgetattr(cell, order_by) for cell in list_CellAttr])
-    normalise_factor = 1
+    # length of time series
+    # assumes all ts are same length; this holds even if some have NaNs
+    l = len(rgetattr(list_CellAttr[0], cell_attr))
+
+    # construct np array that contains the data
     if normalise:
         kg_list = [rgetattr(list_CellAttr[ii], cell_attr)[jj]/ \
                     np.ptp(rgetattr(list_CellAttr[ii], cell_attr))
@@ -108,10 +121,25 @@ def kymograph(list_CellAttr, cell_attr,
                 for jj in range(l)]
     kg_array = np.array(kg_list).reshape(len(list_CellAttr), l)
 
+    # x ticks
+    xtick_step = 60
+    xtick_min = int(round(list_CellAttr[0].time.min(), (-1*xtick_step)))
+    xtick_max = (int(round(list_CellAttr[0].time.max(), (1*xtick_step)))) \
+            + xtick_step
+    xticklabels = range(xtick_min, xtick_max, xtick_step)
+    xticks = []
+    for label in xticklabels:
+        idx_pos = int(np.asscalar(np.where(list_CellAttr[0].time == label)[0]))
+        xticks.append(idx_pos)
+
     if mode == 'heatmap':
         seaborn.set()
         fig, ax = plt.subplots()
-        ax = seaborn.heatmap(kg_array, center = 0, cmap = "vlag")
+        ax = seaborn.heatmap(kg_array, center = 0, cmap = "vlag", square=True)
+        ax.set_ylabel('Cell')
+        ax.set_xlabel('Time (min)')
+        ax.set_xticks(xticks)
+        ax.set_xticklabels(xticklabels)
     elif mode == 'heatmap_split':
         attr_list = [rgetattr(list_CellAttr[ii], order_by) \
                      for ii in range(len(list_CellAttr))]
@@ -131,12 +159,21 @@ def kymograph(list_CellAttr, cell_attr,
                                           center = 0, cmap = "vlag",
                                           ax = axs[ii], square = True,
                                           cbar = False,
-                                          vmin = vmin, vmax = vmax)
+                                          vmin = vmin, vmax = vmax,)
+                axs[ii].set_ylabel('Cell')
+                axs[ii].set_xlabel('Time (min)')
+                axs[ii].set_xticks(xticks)
+                axs[ii].set_xticklabels(xticklabels)
+
             else:
                 axs[ii] = seaborn.heatmap(kg_array[segments[ii-1]:segments[ii]],
                                           center = 0, cmap = "vlag",
                                           ax = axs[ii], square = True,
-                                          cbar = False)
+                                          cbar = False,)
+                axs[ii].set_ylabel('Cell')
+                axs[ii].set_xlabel('Time (min)')
+                axs[ii].set_xticks(xticks)
+                axs[ii].set_xticklabels(xticklabels)
     elif mode == 'line':
         # just the first 20 because then matplotlib dies
         fig, axs = plt.subplots(nrows = 20, ncols = 1,
