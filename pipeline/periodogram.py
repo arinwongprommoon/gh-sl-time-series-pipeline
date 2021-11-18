@@ -143,4 +143,4 @@ def autoreg(t,
 
     model_ps = ar_grima2020.AR_Power(optimal_model, freqs, normalise=True)
     # autoreg code doesn't recognise sampling period, added this as corection
-    return (1/sampling_pd)*model_ps.freqs, model_ps.power
+    return optimal_ar_order, (1/sampling_pd)*model_ps.freqs, model_ps.power
